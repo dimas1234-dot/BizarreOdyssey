@@ -1,0 +1,24 @@
+name: Build Mod JAR
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Unpack ZIP
+      run: unzip -o Bizarre_Odyssey_1.21.1_Fabric_Project.zip
+    - uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+    - uses: gradle/actions/setup-gradle@v3
+      with:
+        gradle-version: '8.10.2'
+    - name: Build Mod
+      run: gradle build --no-daemon
+    - uses: actions/upload-artifact@v4
+      with:
+        name: Bizarre-Odyssey-1.21.1-Fabric
+        path: |
+          build/libs/*.jar
+          !build/libs/*-sources.jar
